@@ -1,0 +1,37 @@
+Package: psifluo
+Type: Package
+Title: Fits Kolber et al (1998) model to FL3500 data
+Version: 0.1.0
+Authors@R: c(
+    person("Jesus", "Bruno", , "bmjesus@univ-nantes.fr", c("aut")),
+    person("Ciochetto", "Audrey", , "audrey.ciochetto@gmail.com", c("aut", "cre")),
+    person("Roodvoets", "M.", , c("aut")),
+    person("Austen", "E. J.", , c("aut")),
+    person("Campbell", "Douglas A.", , "dcampbel@mta.ca", c("aut")),
+    person("Williamson", "Christopher", , "c.williamson@bristol.ac.uk", c("aut"))
+    ) 	 
+Maintainer: Bruno Jesus <bruno.jesus@univ-nantes.fr>
+Description: psifluo is a collection of R functions to analyze data from the PSI 
+    Super Head Fast Fluorometer series (www.psi.cz). The program analyzes variable 
+    fluorescence for single turnover induction (STI) and relaxation (STR, Kolber et al. 1998).
+    It is based on the PSIWORX-R scripts by AUTHORS (SITE).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 2.9)
+Imports:
+    minpack.lm
+Collate:
+    'psi_fluo.R'
+    'read_psi.R'
+    'models.R'
+    'psi_plots.R'
+    'fit_sti.R'
+    'fit_sti_simple.R'
+    'fit_str.R'
+    'psiworx_read.R'
+    'miscelaneous.R'
+    'eilers_peeters_model.R'
+    'npq_model.R'
+RoxygenNote: 6.0.1
