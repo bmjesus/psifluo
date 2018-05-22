@@ -16,7 +16,7 @@ fit_model_fofm<-function(file_name,
                          str=TRUE,
                          sti_model="fofmsig",
                          str_model="tau2",
-                         calib_file="Bruno_Calibration.csv",
+                         calib_file=NA,
                          protocol="Campbell"){
 
 # List of settings that will be used throughout the script
@@ -29,6 +29,18 @@ settings$sigma.PSII.max.lim <- 10000 #why do we need this?
 settings$run_str<-str
 settings$str_model<-str_model
 #
+
+
+#checking if the user has defined a calibration file and if not use Doug Campbell
+#file
+#ADD disclaimer to inform the user that it's only valid for Doug's machine
+if(is.na(calib_file)){
+  cali<-generic_cali
+} else{
+  cali<-read.csv(calib_file)
+}
+
+
 
 ###########################################
 ##PARSING FUNCTION
@@ -76,7 +88,7 @@ if (a[1]==FALSE){
 
 #Load PSI light level calibration .csv file - we need to make this!! ##################******************$$############!!!!!!!!!!!!!!!!!!!!!
 #BJ: why is this file imported twice? here and in settings$PSI.Calibration.File
-cali <- read.csv(calib_file,header=T)
+#cali <- read.csv(calib_file,header=T)
 cali<-assign("cali",cali, envir = e2)
 
 #Extract the power level from the calibration table based on meta data flashlet voltage.
@@ -146,6 +158,7 @@ dev.off() # puts plots in .pdf created, adobe cannot be open
 
 
 #create the layout using the number of light steps
+dev.set()
 dev.new()
 nf<-layout(matrix(c(1:(ceiling(no_light_steps/4)*4)),nrow=ceiling(no_light_steps/4),ncol=4,byrow=TRUE))
 par(oma=c(4,4,3,4),mar=c(0,0,0,0), xpd=NA,tcl=-0.3,bg="white",cex=0.8,cex.axis=0.9,cex.lab=0.9,bty="o",las=1,mgp=c(3,0.5,0),adj=0.5)
@@ -325,7 +338,8 @@ for(d in 2:ncol(data.str)){
 
 
 } #end of str loop through data.str columns
-dev.set()
+
+dev.set() #this sets the graphical device back to the RStudio panel
 
 
 #end of if STR==TRUE

@@ -6,15 +6,14 @@
 \usage{
 fit_model_fofm(file_name, out_name = "results", samples = 1,
   num_steps = 11, sti = TRUE, str = TRUE, sti_model = "fofmsig",
-  str_model = "tau2", calib_file = "Bruno_Calibration.csv",
-  protocol = "Campbell")
+  str_model = "tau2", calib_file = NA, protocol = "Campbell")
 }
 \arguments{
 \item{sti}{the user decides if fit should be done in the induction points}
 
 \item{str}{the user decides if fit should be done in the relaxation points}
 
-\item{sti_model}{decide which sti model to fit c("fofmsig","fofmsigp","sigp","sig"). "fofmsigp", which fits fo fm sigmaPSII and rho; "fofmsig", which fits fo fm 
+\item{sti_model}{decide which sti model to fit c("fofmsig","fofmsigp","sigp","sig"). "fofmsigp", which fits fo fm sigmaPSII and rho; "fofmsig", which fits fo fm
 and sigmaPSII and sets rho to 0; "sigp", which fits sigmaPSII and p, and calculates fo and fm as the mean of points specified in fo_pts and fm_pts; "sig", which fits sigmaPSII and sets p to 0, calcualtes fo and fm as the mean of points specified in fo_pts and fm_pts}
 
 \item{str_model}{decide which str model to fit}
