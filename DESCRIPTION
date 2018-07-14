@@ -2,6 +2,7 @@ Package: psifluo
 Type: Package
 Title: Fits Kolber et al (1998) model to FL3500 data
 Version: 0.1.0
+Date: 2018-05-01
 Authors@R: c(
     person("Jesus", "Bruno", , "bmjesus@univ-nantes.fr", c("aut")),
     person("Ciochetto", "Audrey", , "audrey.ciochetto@gmail.com", c("aut", "cre")),

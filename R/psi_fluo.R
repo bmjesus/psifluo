@@ -1,7 +1,7 @@
-#' @title Function to import and fit model
-#' @description  Main processing scrip for PSI fluorometer generated files. Script cycles through all FluorWin output files in a specified folder and calculates FRR paramaters.
-#' @param sti the user decides if fit should be done in the induction points
-#' @param str the user decides if fit should be done in the relaxation points
+#' @title Function to import and fit PSI FL3500 data
+#' @description  Main processing scrip for PSI fluorometer generated files. Script cycles through all FluorWin output files in a specified folder and calculates FRR parameters.
+#' @param sti fit the induction points, default = `true`
+#' @param str fit the relaxation points, default = `true`
 #' @param sti_model decide which sti model to fit c("fofmsig","fofmsigp","sigp","sig"). "fofmsigp", which fits fo fm sigmaPSII and rho; "fofmsig", which fits fo fm
 #' and sigmaPSII and sets rho to 0; "sigp", which fits sigmaPSII and p, and calculates fo and fm as the mean of points specified in fo_pts and fm_pts; "sig", which fits sigmaPSII and sets p to 0, calcualtes fo and fm as the mean of points specified in fo_pts and fm_pts
 #' @param str_model decide which str model to fit
