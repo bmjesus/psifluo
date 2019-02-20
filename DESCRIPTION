@@ -6,33 +6,31 @@ Date: 2018-05-01
 Authors@R: c(
     person("Jesus", "Bruno", , "bmjesus@univ-nantes.fr", c("aut")),
     person("Ciochetto", "Audrey", , "audrey.ciochetto@gmail.com", c("aut", "cre")),
-    person("Roodvoets", "M.", , c("aut")),
-    person("Austen", "E. J.", , c("aut")),
     person("Campbell", "Douglas A.", , "dcampbel@mta.ca", c("aut")),
     person("Williamson", "Christopher", , "c.williamson@bristol.ac.uk", c("aut"))
     ) 	 
 Maintainer: Bruno Jesus <bruno.jesus@univ-nantes.fr>
 Description: psifluo is a collection of R functions to analyze data from the PSI 
     Super Head Fast Fluorometer series (www.psi.cz). The program analyzes variable 
-    fluorescence for single turnover induction (STI) and relaxation (STR, Kolber et al. 1998).
-    It is based on the PSIWORX-R scripts by AUTHORS (SITE).
+    fluorescence for single turnover induction (STI) and relaxation (STR) following the Kolber et al. (1998) FRRf protocol.
+    It is based on the PSIWORX-R scripts by Audrey Ciochetto (https://sourceforge.net/projects/psiworx/).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 2.9)
+    R (>= 2.10)
 Imports:
     minpack.lm
 Collate:
-    'psi_fluo.R'
-    'read_psi.R'
+    'process_psi.R'
+    'read_psi_campbell.R'
     'models.R'
-    'psi_plots.R'
     'fit_sti.R'
-    'fit_sti_simple.R'
     'fit_str.R'
-    'psiworx_read.R'
-    'miscelaneous.R'
-    'eilers_peeters_model.R'
-    'npq_model.R'
-RoxygenNote: 6.0.1
+    'sti_data.R'
+    'str_data.R'
+    'generic_cali.R'
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+Suggests: 
+    testthat

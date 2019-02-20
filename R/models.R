@@ -1,12 +1,5 @@
-#this file contains the functions to fit the STI and STR models
-#they are currently from Kolber, Z., O. Prášil and P.G. Falkowski (1998) 
-#Measurements of variable chlorophyll fluorescence using fast repetition rate techniques: 
-#defining methodology and experimental protocols. Biochemica et 
-#Biophysica Acta. 1367: 88-106. 
-
-
 #' @title Model (Kolber et al. 1998) - induction
-#' @description definition of the model that will be fitted to the induction step
+#' @description definition of the mode that will be fitted to the induction step
 #' @param incident flashlets, numeric
 #' @param sigma value of sigma PSII
 #' @param fo Fo value
@@ -15,7 +8,7 @@
 #' @return a value that will be used in the fitting function
 #' @keywords internal
 #' @export
-psiworx.model.sti<-function(incident, sigma, fo, fm, rho){
+kolber_sti<-function(incident, sigma, fo, fm, rho){
   c<-rep(0, times=length(incident)) # initialize cumulative excitation
   c[2]<-incident[1]*sigma           # get the first excitation value, using c[2] to properly fit curve to "first point"
   # calculate fraction of closed PSII centres, with connectivity
@@ -23,12 +16,12 @@ psiworx.model.sti<-function(incident, sigma, fo, fm, rho){
     c[ii]<-c[ii-1]+((incident[ii]*sigma*(1-c[ii-1]))/(1-(rho*c[ii-1])));
   }
   return(fo + (((fm - fo)*c*(1-rho))/(1-(c*rho))))
-}   # end psiworx.sti.model
+}
 
 
 #' @title Model (Kolber et al. 1998) - relaxation
 #' @description definition of the model that will be fitted to the relaxation step
-#' @param wm the model type defined by the user (i.e. tau1, tau2 or tau3)
+#' @param tau_model the model type defined by the user (i.e. tau1, tau2 or tau3)
 #' @param fo Fo value
 #' @param fm Fm value
 #' @param tau1 parameter that will store the value of tau1
@@ -39,8 +32,8 @@ psiworx.model.sti<-function(incident, sigma, fo, fm, rho){
 #' @return a value that will be used in the fitting function
 #' @keywords internal
 #' @export
-psiworx.model.str<-function(x,fo,fm,tau1,alpha1,tau2,alpha2,tau3,wm){
-  switch(wm,
+kolber_str<-function(x,fo,fm,tau1,alpha1,tau2,alpha2,tau3,tau_model){
+switch(tau_model,
          tau1={
            y <- fo + (fm-fo) * exp(-x/tau1);
          },
@@ -52,8 +45,19 @@ psiworx.model.str<-function(x,fo,fm,tau1,alpha1,tau2,alpha2,tau3,wm){
          }
   )
   return(y);
-}    #END FUNCTION
+}
 
-
-
+#' @title Simple negative exponential to a subset of the data in the relaxation curve
+#' @description Definition of the model that will be fitted to the relaxation step
+#' @param x  Time
+#' @param fo Fo value
+#' @param fm Fm value
+#' @param tau1 Parameter that will store the value of tau1
+#' @return A numerical value that will be used in the fitting function
+#' @keywords internal
+#' @export
+subset_str<-function(x,fo,fm,tau1){
+           y <- fo + (fm-fo) * exp(-x/tau1);
+           return(y);
+}
 

@@ -2,32 +2,38 @@
 % Please edit documentation in R/fit_sti.R
 \name{fit_sti}
 \alias{fit_sti}
-\title{Fitting function for the induction stage}
+\title{Fitting function for a FRRf induction curve}
 \usage{
-fit_sti(x, y, fo.opt, fm.opt, sigma.opt, rho.opt, sigma_max, wm, sti.fit, c)
+fit_sti(x, y, fo = NULL, fm = NULL, sigma.opt = 300, rho.opt = 0.1,
+  fit_model = "all", plots = TRUE)
 }
 \arguments{
-\item{x}{time}
+\item{x}{Flashlet energy (photons . A^-2 .  flashlet{^-1}) used to generate a x axis of cumulative energy by multiplying by flashlet count. A typical value from a flashlet calibration file of Doug Campbell's lab is 0.0002167971 (photons . A^-2 . flashlet^-1). This value is wrong if you are not using his machine and you should supply the correct value for your machine if you want to obtain correct sigma values (A^2 . PSII^{-1}).}
 
-\item{y}{fluorescence}
+\item{y}{Fluorescence data vector.}
 
-\item{fo.opt}{}
+\item{fo}{Initial value for fo, default (NULL) is the 1st point of the fluorescence data vector y.}
 
-\item{rho.opt}{}
+\item{fm}{Initial value for fm, default (NULL) is the average of the maximum 5 points of the fluorescence data vector y.}
 
-\item{sigma_max}{}
+\item{sigma.opt}{Initial value for sigma, default = 300 A^2 PSII^-1.}
 
-\item{wm}{}
+\item{rho.opt}{Initial value for rho excitonic connectivity among PSII units, default = 0.1.}
 
-\item{sti.fit}{}
+\item{fit_model}{How many parameters to fit to the curve. Default is "all". Options are: "all", "sigma_rho" and "sigma". "All" - fo, fm, sigma and rho are fitted; "sigma_rho" -  sigma and rho are fitted, fo and fm are fixed at user-defined levels, defaults are fo =  1st point of the fluorescence data vector y, fm = average of the maximum 5 points of the fluorescence data vector y;  "sigma" - fo, fm and rho are fixed, only sigma is fitted.}
 
-\item{c}{is the object that has the sti data stored, it can have several columns
-if there are several measurement}
+\item{plots}{Turns on and off plotting of data and fitted curves (TRUE, FALSE). Default is TRUE.}
 }
 \value{
-a value that will be used in the fitting function
+The function returns a list with: 1- fitted parameters and respective SE, p-values (list); 2 - flashlet energy (single element numeric vector); 3- fitted values (numeric vector); 4 - cumulative energy (numeric vector).
 }
 \description{
-this will fit the Kolber et al. 1998 model to the induction step
+This will fit a model to the induction phase using the equations of Zbigniew S. Kolber, Ondrej Prasil, Paul G. Falkowski (1998) Measurements of variable chlorophyll Fuorescence using fast repetition rate techniques: defining methodology and experimental protocols. Biochimica et Biophysica Acta, 1367: 88-106.
+}
+\examples{
+
+fit_sti(x = 0.0002167971, y = sti_data$light_1,fit_model = 'all')
+
+fit_sti(x = 0.0002167971, y = sti_data$light_1,fit_model = 'sigma_rho')
 }
 \keyword{external}
