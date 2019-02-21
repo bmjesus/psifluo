@@ -1,0 +1,252 @@
+---
+title: "How to use the psifluo package"
+author: "Bruno Jesus (bmjesus@gmail.com)"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_width: 6 
+fig_height: 6 
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+
+---
+<style type="text/css">
+.table {
+    width: 40%;
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The *psifluo* package is a collection of R functions to analyze data from the PSI  Super Head Fast Fluorometer series (www.psi.cz). The program analyzes variable fluorescence for single turnover induction (STI) and re-opening (STR) following the Kolber et al. (1998)^[Zbigniew S. Kolber, Ondrej Prasil, Paul G. Falkowski (1998) Measurements of variable chlorophyll Fuorescence using fast repetition rate techniques: defining methodology and experimental protocols. Biochimica et Biophysica Acta, 1367: 88-106.] FRRf protocol. For more information about the fluorescence protocols and FRRf mechanisms please read the *FRRf* vignette.
+
+
+The package contains four functions:
+
+```
+- fit_sti()
+- fit_str()
+- read_psi_campbell()
+- process_psi()
+```
+
+--------
+
+
+## *fit_sti()*
+
+This function fits a model to the induction phase using the equations of Kolber et al. (1998). The objective of this function is usually to obtain estimations of *Fo*, *Fm*, *Sigma* and *Rho* from the induction curve. All models are fitted using the non-linear fitting function nlsLM from the minpack.lm package.
+
+
+###Usage
+
+```
+fit_sti(x, y, fit_model, fo, fm , sigma.opt, rho.opt, plots)
+```
+
+###Parameters
+
+*x* - flashlet energy (<font size="1">$photons . A^{-2} . flashlet^{-1}$</font>) used to generate a x axis of cumulative energy by multiplying by flashlet count (numeric).
+
+
+*y* - fluorescence data vector.
+
+
+*fit_model* - text parameter to select the way the model is fitted to the dataset. The user can control how many parameters to fit to the curve (default is **"*all*"**). Options are: **"*all*"**, **"*sigma_rho*"** and **"*sigma*"**. **"*All*"** - fo, fm, sigma and rho are fitted; **"*sigma_rho*"** -  sigma and rho are fitted, fo and fm are fixed at user-defined levels, defaults are fo =  1st point of the fluorescence data vector y, fm = average of the maximum 5 points of the fluorescence data vector y;  **"*sigma*"** - fo, fm and rho are fixed, only sigma is fitted.
+ 
+
+*fo* - starting value for fo, default (NULL) is the 1st point of the fluorescence data vector y (numeric).
+
+
+*fm* - starting value for fm, default (NULL) is the average of the maximum 5 points of the fluorescence data vector y (numeric).
+
+
+*sigma.opt* - starting value for sigma, default = 300 <font size="1">$A^2 . PSII^{-1}$</font> (numeric).
+
+
+*rho.opt* - starting value for rho excitonic connectivity among PSII units, default = 0.1 (numeric).  
+
+*plots* - turns on and off plotting of data and fitted curves (TRUE, FALSE). Default is TRUE (logical).
+
+The function returns a list with : 
+
++ 1 - fitted parameters and respective SE, p-values (list).
++ 2 - flashlet energy (single element numeric vector). 
++ 3 - fitted values (numeric vector).
++ 4 - cumulative energy (numeric vector).
+
+
+Note: The flashlet energy value is machine and voltage dependent so you need to provide the value specific for the machine used. However, if you want to test the fit_psi() function and you do not have this value you can try 0.0002167971 (<font size="1">$photons . A^{-1} . flashlet^{-1}$</font>) which is a typical value from a flashlet calibration file of Doug Campbell's lab. **IMPORTANT**: this value is wrong if you are not using his machine and you should supply the correct value for your machine if you want to obtain correct sigma values (<font size="1">$A^2 . PSII^{-1}$</font>).
+
+###Examples
+
+This example runs with a flashlet energy value of  0.0002167971 (<font size="1">$photons . A^{-1} . flashlet^{-1}$</font>) and an induction dataset we supply in the example dataset (sti_data). All the estimated parameters are stored in the object *sti_parameters*.
+
+
+```{r fig1, fig.height = 4.5, fig.width = 5, fig.align = "center"}
+sti_parameters<-psifluo::fit_sti(x = 0.0002167971,y=psifluo::sti_data$light_1)
+
+
+```
+
+
+## *fit_str()*
+
+This function fits a model to the re-opening phase using the equations of Kolber et al. (1998). The objective of this function is usually to obtain estimations of *Fo*, *Fm*, *Sigma* and *Rho* from the induction curve. All models are fitted using the non-linear fitting function nlsLM from the minpack.lm package.
+
+
+###Usage
+
+```
+fit_str(x, y, fit_model, fo, fm , tau_model, subset_time, plots)
+```
+
+###Parameters
+
+*x* - vector with cumulative time in microseconds (numeric vector).
+
+*y* - fluorescence vector (numeric vector).
+
+*fo* - starting value for fo, if NULL then it defaults to the last point of the relaxation curve (numeric).
+
+*fm* - starting value for fm, if NULL then it defaults to the first point of the relaxation curve (numeric). 
+
+*tau_model* - text parameter to select the way the model is fitted to the dataset. The user can control how many life-time parameters for PSII reopening they want to estimate. Options: **"*tau1*"**, **"*tau2*"**, **"*tau3*"** and **"*tau1_subset*"** (the user selects a subset of the data starting from the first point of the re-opening curve). Default is **"*tau1*"**, fitting re-opening with a single phase exponential decay with lifetime of tau1.
+
+*subset_time* -  amount of time to fit the tau1_subset model (default = 500 us)
+
+*plots* - turns on and off the plotting (TRUE, FALSE). Default is TRUE
+
+
+The function returns a list with: 
+
++ 1 - fitted parameters (list)
++ 2 - fitted values (numeric vector) 
++ 3 - time in us (numeric vector)
+
+###Examples
+
+This example runs the re-opening phase of the dataset presented above. The dataset is supplied in the example dataset (str_data). All the estimated parameters are stored in the object *str_parameters*.
+
+####Fitting re-opening data with 3 *tau* parameters
+
+```{r fig2, fig.height = 4.5, fig.width = 5, fig.align = "center"}
+str_parameters<-psifluo::fit_str(x = psifluo::str_data$time,y=psifluo::str_data$light_1,tau_model = "tau3")
+```
+
+####Fitting re-opening data with only a tau parameter and just the initial stage (500 us) of the re-opening phase.
+
+```{r fig3, fig.height = 4.5, fig.width = 5, fig.align = "center"}
+str_parameters<-psifluo::fit_str(x = psifluo::str_data$time,y=psifluo::str_data$light_1,tau_model = "tau1_subset", subset_time = 500)
+```
+
+## *read_psi_campbell()*
+
+This function imports data from a PSI FL-3500 FRRf using Doug Campbell double light/dark FRRf protocol. This protocol 
+generates a FRRf induction/re-opening measurement on top of a level of actinic light (named in the import step as "light" samples)  and then again after a user defined dark period (ex. 1 s) to allow re-opening of PSII (named in the import step as "dark" samples). The function reads in the data file, parses metadata, subtracts electronic background from fluorescence signal during light flashlets, splits columns into "light" and "dark" vectors,  splits data by sti (induction) and str (re-opening), calculates the actinic light level at each step. For a detailed desctription of Doug Campbell's double light/dark FRRf protocol please see the *FRRf* vignette.
+
+###Usage###
+
+
+```
+read_psi_campbell(filename,calib_file,dec)
+```
+
+
+###Parameters
+
+*filename* - path to the file to be imported
+
+*calib_file* - path to the calibration file to convert lamp voltage settings to (<font size="1">$photons . A^{-2} . s^{-1}$</font>. If not provided the default is a calibration function from a Doug Campbell PSI FL3500 instrument. If you are not using his machine the parameters sigma PSII, cumulative excitation and actinic PAR values associated to an individual machine will be wrongly calibrated. For instructions on how to build your calibration file please see the *FRRf* vignette.
+
+*dec* - decimal separator (default= ".").
+
+
+The function returns a list with: 
+
++ 1 - all.data  = raw data input. 
++ 2 - meta.data = acquisiton settings. 
++ flashlet_energy = the calculated flashlet energy from the calibration file. 
++ 3 - data.sti  = induction only. 
++ 4 - data.str  = re-opening only. 
++ 5 - measuring_steps = voltage and equivalent actinic PAR at each step.
+
+
+## *process_psi()*
+
+
+This is a wrapping function that combines all steps of processing a FRRf PSI file. Namely, this function will import a PSI Fluorwin output file and will attempt to fit FRRf induction/re-opening models to the dataset. It can process files generated with Doug Campbell's double FRRf protocol and with the PSI RLC wizard (not implemented yet). It uses *read_psi_campbell()* to import and parse the data and it uses *fit_sti()* and *fit_str()* to fit the induction and re-opening models, respectively.
+
+
+###Usage###
+```
+process_psi(file_name, sti_model = "all",str_model = "tau2",subset_time = 600,
+calib_file = NA, protocol = "campbell",turn_plots_off = FALSE,plot_matrix = FALSE,
+out_files = FALSE, out_name,out_pdf = FALSE,dec = ".")
+
+```
+
+###Parameters
+
+*file_name* - path to the file to be imported
+
+
+*calib_file* - path to the calibration file to convert lamp voltage settings to (<font size="1">$photons . A^{-2} . s^{-1}$</font>. If not provided the default is a calibration function from a Doug Campbell PSI FL3500 instrument. If you are not using his machine the parameters sigma PSII, cumulative excitation and actinic PAR values associated to an individual machine will be wrongly calibrated. For instructions on how to build your calibration file please see the *FRRf* vignette.
+
+
+*sti_model* - text parameter to select the way the model is fitted to the dataset. The user can control how many parameters to fit to the curve (default is **"*all*"**). Options are: **"*all*"**, **"*sigma_rho*"** and **"*sigma*"**. **"*All*"** - fo, fm, sigma and rho are fitted; **"*sigma_rho*"** -  sigma and rho are fitted, fo and fm are fixed at user-defined levels, defaults are fo =  1st point of the fluorescence data vector y, fm = average of the maximum 5 points of the fluorescence data vector y;  **"*sigma*"** - fo, fm and rho are fixed, only sigma is fitted.
+
+
+*str_model* - text parameter to select the way the model is fitted to the dataset. The user can control how many life-time parameters for PSII reopening they want to estimate. Options: **"*tau1*"**, **"*tau2*"**, **"*tau3*"** and **"*tau1_subset*"** (the user selects a subset of the data starting from the first point of the re-opening curve). Default is **"*tau1*"**, fitting re-opening with a single phase exponential decay with lifetime of tau1.
+
+
+*subset_time* - amount of time to fit the tau1_subset model (default = 500 us).
+
+*protocol* - type of protocol used to produce the PSI file. Currently only "campbell" is implemented.
+
+*turn_plots_off* - logical, plots off. Default = FALSE.
+
+*plot_matrix* - logical, should plots be plotted to a plot matrix. Default = TRUE. Partially implemented.
+
+*out_files* - logical, should results (fitted parameters) be exported to a csv file. Default = FALSE.
+
+*out_name* - name the file to be exported with the results. Only works if the user selects out_files=TRUE.
+
+*out_pdf* - logical, should the plots be exported to a pdf file. Default = FALSE.
+
+*dec* - decimal separator of the PSI input file, default= "."
+
+
+
+
+##The datasets
+
+###Induction dataset
+<font size="1">
+```{r, echo=FALSE, results='sti'}
+dt<-head(psifluo::sti_data[,1:12], 10)
+knitr::kable(dt)
+
+```
+</font>
+
+###Re-opening dataset
+
+<font size="1">
+
+```{r, echo=FALSE, results='str'}
+dt<-head(psifluo::str_data[,1:12], 10)
+knitr::kable(dt)
+
+```
+
+</font>
+
+

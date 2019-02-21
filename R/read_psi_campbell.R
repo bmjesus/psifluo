@@ -139,9 +139,9 @@ names(meta.data)<-c("ST1_num","ST1_light","ST1_duration","ST1_dark","Light_curve
 #file
 #ADD disclaimer to inform the user that it's only valid for Doug's machine
 if(is.na(calib_file)){
-    cali<-generic_cali
+    cali<-psifluo::generic_cali
 } else{
-  cali<-read.csv(calib_file)
+  cali<-utils::read.csv(calib_file)
 }
 
 #Defining some constants

@@ -187,8 +187,8 @@ fitted_values<-tryCatch({fit1<-kolber_sti(incident=x, sigma=res$sigma_sti, fo=re
 ##########################################################################
 #Optional plot
 if (plots==TRUE){
-plot(cumulative_energy,y,ylab="Fluorescence",xlab=expression(paste("Cumulative energy (photons ",ring(A)^{-2},")")),las=1)
-points(cumulative_energy,fitted_values,col=2,type='l')
+graphics::plot(cumulative_energy,y,ylab="Fluorescence",xlab=expression(paste("Cumulative energy (photons ",ring(A)^{-2},")")),las=1)
+  graphics::points(cumulative_energy,fitted_values,col=2,type='l')
 
 
 
@@ -200,7 +200,7 @@ leg.L.Fo<-tryCatch({paste("Fo =", round(res$fo_sti, digits=3), "\u00B1", round(r
 leg.L.Fm<-tryCatch({paste("Fm =", round(res$fm_sti, digits=3), "\u00B1", round(res$fm_se_sti, digits=3), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 leg.L.sigma<-tryCatch({paste("sigma =", round(res$sigma_sti, digits=0), "\u00B1", round(res$sigma_se_sti, digits=0), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 leg.L.rho<-tryCatch({paste("rho =", round(res$rho_sti, digits=3), "\u00B1", round(res$rho_se_sti, digits=3), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
-legend("bottomright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,2,1,1,1,1),adj=c(0, 0.5))
+graphics::legend("bottomright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,2,1,1,1,1),adj=c(0, 0.5))
 }
 
 ##########################################################################
