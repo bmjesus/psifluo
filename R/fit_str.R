@@ -108,7 +108,7 @@ switch(tau_model,
        tau1={
          rlfit.light <- tryCatch({
           minpack.lm::nlsLM(y ~kolber_str(x=x, fo=fo.opt, fm=fm.opt,tau1 = tau1.opt, tau_model="tau1"),  start=fg, algorithm="port",upper=ub,lower=lb,trace=F,
-                 control=nls.control(maxiter=1024) )
+                 control = stats::nls.control(maxiter=1024) )
          },error=function(e){
            print(paste("Error: could not fit one re-opening dataset with model ",tau_model,sep=""));
            return(NULL)
@@ -134,7 +134,7 @@ switch(tau_model,
        tau2={
          rlfit.light <- tryCatch({
            minpack.lm::nlsLM(y ~kolber_str(x=x, fo=fo.opt, fm=fm.opt, tau1=tau1.opt, alpha1=alpha1.opt, tau2=tau2.opt,tau_model="tau2"),  start=fg2, algorithm="port",upper=ub2,lower=lb2 ,trace=F,
-                 control=nls.control(maxiter=1024) )
+                 control = stats::nls.control(maxiter=1024) )
          },error=function(e){
            print(paste("Error: could not fit one re-opening dataset with model ",tau_model,sep=""));
            return(NULL)
@@ -164,7 +164,7 @@ res$fo_se_str,res$fm_se_str,res$tau1_se_str,res$alpha1_se_str,res$tau2_se_str,al
          rlfit.light <- tryCatch({
            minpack.lm::nlsLM(y ~kolber_str(x=x, fo=fo.opt, fm=fm.opt, tau1=tau1.opt, alpha1=alpha1.opt, tau2=tau2.opt, alpha2=alpha2.opt, tau3=tau3.opt,tau_model="tau3"),  start=fg3, upper=ub3,lower = lb3,
                              algorithm="port", trace=F,
-                 control=nls.control(maxiter=1024) )
+                 control = stats::nls.control(maxiter=1024) )
          },error=function(e){
            print(paste("Error: could not fit one re-opening dataset with model ",tau_model,names(y),sep=""));
            return(NULL)
@@ -188,7 +188,7 @@ res$fo_se_str,res$fm_se_str,res$tau1_se_str,res$alpha1_se_str,res$tau2_se_str,al
        tau1_subset={
          rlfit.light <- tryCatch({
            minpack.lm::nlsLM(y_subset ~subset_str(x=x_subset, fo=fg$fo.opt, fm=fg$fm.opt,tau1 = tau1.opt),  start=fg_subset,upper = ub_subset,lower=lb_subset, algorithm="port", trace=F,
-                             control=nls.control(maxiter=1024) )
+                             control = stats::nls.control(maxiter=1024) )
          },error=function(e){
            print(paste("Error: could not fit one re-opening dataset with model ",tau_model,sep=""));
            return(NULL)
@@ -231,12 +231,12 @@ if (tau_model=='tau1_subset'){
 #print(fitted_values)
 
     if (plots==TRUE){
-plot(x=x,y=y, col="blue", xlab="Time (log(s))", ylab="Fluorescence yield", bty="l",log="x",las=1);
+    graphics::plot(x=x,y=y, col="blue", xlab="Time (log(s))", ylab="Fluorescence yield", bty="l",log="x",las=1);
 
   if (tau_model=='tau1_subset'){
-    points(x_subset,fitted_values,col=2,type='l')
+    graphics::points(x_subset,fitted_values,col=2,type='l')
   }else{
-    points(x,fitted_values,col=2,type='l')
+    graphics::points(x,fitted_values,col=2,type='l')
   }
 
 
@@ -255,15 +255,15 @@ plot(x=x,y=y, col="blue", xlab="Time (log(s))", ylab="Fluorescence yield", bty="
 
 
   if(is.na(res$alpha1_str) && is.na(res$alpha2_str)){
-    legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,2,1,1,1),adj=c(0, 0.5))
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,2,1,1,1),adj=c(0, 0.5))
   }
   if(!is.na(res$alpha1_str)&is.na(res$tau3_str)){
 
-    legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2),bty="n",text.font=c(2,2,1,1,1,1,1,1),adj=c(0, 0.5))
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2),bty="n",text.font=c(2,2,1,1,1,1,1,1),adj=c(0, 0.5))
   }
   if(!is.na(res$alpha3_str)){
 
-    legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3,leg.L.alpha3),bty="n",text.font=c(2,2,1,1,1,1,1,1,1,1),adj=c(0, 0.5))
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3,leg.L.alpha3),bty="n",text.font=c(2,2,1,1,1,1,1,1,1,1),adj=c(0, 0.5))
     }
 
 

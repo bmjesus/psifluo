@@ -54,7 +54,7 @@ fitted_values_sti<-data.frame(matrix(ncol = 2*number_datasets, nrow = length(a$d
 
 
 #creating a data.frame to store the fitted parameters
-parameters_sti<-setNames(data.frame(matrix(ncol = 16, nrow = 0)), c('fo_sti','fm_sti','sigma_sti','rho_sti','fo_se_sti','fm_se_sti','sigma_se_sti','rho_se_sti','fo_tvalue_sti','fm_tvalue_sti','sigma_tvalue_sti','rho_tvalue_sti','fo_p_sti','fm_p_sti','sigma_p_sti','rho_p_sti'))
+parameters_sti<-stats::setNames(data.frame(matrix(ncol = 16, nrow = 0)), c('fo_sti','fm_sti','sigma_sti','rho_sti','fo_se_sti','fm_se_sti','sigma_se_sti','rho_se_sti','fo_tvalue_sti','fm_tvalue_sti','sigma_tvalue_sti','rho_tvalue_sti','fo_p_sti','fm_p_sti','sigma_p_sti','rho_p_sti'))
 
 
 ###############################################################################
@@ -81,7 +81,7 @@ counter<-1
 for (i in 2:(number_datasets_LD+1))
 {
   a1<-fit_sti(x = a$flashlet_energy,y = a$data.sti[,i],fit_model = sti_model,plots = plots)
-  legend('topleft', legend=names(a$data.sti[i]),bty='n',cex=1)
+  graphics::legend('topleft', legend=names(a$data.sti[i]),bty='n',cex=1)
   parameters_sti[counter,]<-a1$fitted_parameters
   fitted_values_sti[,counter]<-a1$fitted_values
   counter<-counter+1
@@ -115,7 +115,7 @@ if (str_model == 'tau1_subset'){
 
 
 
-parameters_str<-setNames(data.frame(matrix(ncol = 30, nrow = 0)), c('fo_str','fm_str','tau1_str','alpha1_str','tau2_str','alpha2_str','tau3_str','fo_se_str','fm_se_str','tau1_se_str','alpha1_se_str','tau2_se_str','alpha2_se_str','tau3_se_str','fo_tvalue_str','fm_tvalue_str','tau1_tvalue_str','alpha1_tvalue_str','tau2_tvalue_str','alpha2_tvalue_str','tau3_tvalue_str','fo_p_str','fm_p_str','tau1_p_str','alpha1_p_str','tau2_p_str','alpha2_p_str','tau3_p_str','alpha3_str','alpha3_se_str'))
+parameters_str<-stats::setNames(data.frame(matrix(ncol = 30, nrow = 0)), c('fo_str','fm_str','tau1_str','alpha1_str','tau2_str','alpha2_str','tau3_str','fo_se_str','fm_se_str','tau1_se_str','alpha1_se_str','tau2_se_str','alpha2_se_str','tau3_se_str','fo_tvalue_str','fm_tvalue_str','tau1_tvalue_str','alpha1_tvalue_str','tau2_tvalue_str','alpha2_tvalue_str','tau3_tvalue_str','fo_p_str','fm_p_str','tau1_p_str','alpha1_p_str','tau2_p_str','alpha2_p_str','tau3_p_str','alpha3_str','alpha3_se_str'))
 
 
 
@@ -124,7 +124,7 @@ for (i in 2:(number_datasets_LD+1))
 {
   a1<-fit_str(a$data.str[,1],a$data.str[,i],
               tau_model=str_model,plots=plots,subset_time = subset_time)
-  legend('bottomleft', legend=names(a$data.str[i]),bty='n',cex=1)
+  graphics::legend('bottomleft', legend=names(a$data.str[i]),bty='n',cex=1)
   parameters_str[counter,]<-a1$fitted_parameters
   fitted_values_str[,counter]<-a1$fitted_values
   counter<-counter+1
@@ -145,8 +145,8 @@ names(output)<-c('data','sti_parameters','str_parameters')
 #prepare output files if the user chose to have them
 if (out_files==TRUE){
   #write.table(as.data.frame(a[1]),file="data_psi.txt",col.names = TRUE,row.names = FALSE,sep=";")
-  write.table(parameters_sti,file=paste(out_name,"_parameters_sti.txt",sep=""),col.names = TRUE,row.names = FALSE,sep=";")
-  write.table(parameters_str,file=paste(out_name,"_parameters_str.txt",sep=""),col.names = TRUE,row.names = FALSE,sep=";")
+  utils::write.table(parameters_sti,file=paste(out_name,"_parameters_sti.txt",sep=""),col.names = TRUE,row.names = FALSE,sep=";")
+  utils::write.table(parameters_str,file=paste(out_name,"_parameters_str.txt",sep=""),col.names = TRUE,row.names = FALSE,sep=";")
    }
 
 #option of turning all plotting off
@@ -162,22 +162,22 @@ if (plot_matrix==TRUE){
   num_plots=2*a$meta.data$Light_curves_repeats
 
   #closing ALL open devices
-    graphics.off()
+  grDevices::graphics.off()
 ################################
 #plotting STI data
 ################################
 
-dev.set()
-dev.new()
-nf<-layout(matrix(c(1:(ceiling(num_plots/4)*4)),nrow=ceiling(num_plots/4),ncol=4,byrow=TRUE))
+grDevices::dev.set()
+grDevices::dev.new()
+nf<-graphics::layout(matrix(c(1:(ceiling(num_plots/4)*4)),nrow=ceiling(num_plots/4),ncol=4,byrow=TRUE))
 #nf<-layout(matrix(c(1:(ceiling(no_light_steps/4)*4)),nrow=ceiling(no_light_steps/4),ncol=4,byrow=TRUE))
 
-par(oma=c(4,4,3,4),mar=c(0,0,0,0), xpd=NA,tcl=-0.3,bg="white",cex=0.8,cex.axis=0.9,cex.lab=0.9,bty="o",las=1,mgp=c(3,0.5,0),adj=0.5)
+graphics::par(oma=c(4,4,3,4),mar=c(0,0,0,0), xpd=NA,tcl=-0.3,bg="white",cex=0.8,cex.axis=0.9,cex.lab=0.9,bty="o",las=1,mgp=c(3,0.5,0),adj=0.5)
 
 for (i in 1:num_plots){
-    plot(a$data.sti[,i+1],xlab="", ylab="", bty="l",xaxt='n',yaxt='n',pch=21,col="blue")
-  lines(fitted_values_sti[,i],type="l",col="red",lwd=1.5)
-  legend('topleft', legend=names(a$data.sti[i+1]),bty='n',cex=0.7)
+  graphics::plot(a$data.sti[,i+1],xlab="", ylab="", bty="l",xaxt='n',yaxt='n',pch=21,col="blue")
+  graphics::lines(fitted_values_sti[,i],type="l",col="red",lwd=1.5)
+  graphics::legend('topleft', legend=names(a$data.sti[i+1]),bty='n',cex=0.7)
 
   #this is for the legend at the bottom right
   # Light: Print optimized parameter values on the plot ####
@@ -188,7 +188,7 @@ for (i in 1:num_plots){
   leg.L.sigma<-tryCatch({paste("sigma =", round(parameters_sti$sigma_sti[i], digits=0), "\u00B1", round(parameters_sti$sigma_se_sti[i], digits=0), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
   leg.L.rho<-tryCatch({paste("rho =", round(parameters_sti$rho_sti[i], digits=3), "\u00B1", round(parameters_sti$rho_se_sti[i], digits=3), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 
-  legend("bottomright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,1,1,1,1),adj=c(0, 0.5),cex = 0.7)
+  graphics::legend("bottomright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,1,1,1,1),adj=c(0, 0.5),cex = 0.7)
 
 
   }
@@ -198,15 +198,15 @@ for (i in 1:num_plots){
 #plotting STR data
 ################################
 
-dev.new()
-nf<-layout(matrix(c(1:(ceiling(num_plots/4)*4)),nrow=ceiling(num_plots/4),ncol=4,byrow=TRUE))
+grDevices::dev.new()
+nf<-graphics::layout(matrix(c(1:(ceiling(num_plots/4)*4)),nrow=ceiling(num_plots/4),ncol=4,byrow=TRUE))
 
-par(oma=c(4,4,3,4),mar=c(0,0,0,0), xpd=NA,tcl=-0.3,bg="white",cex=0.8,cex.axis=0.9,cex.lab=0.9,bty="o",las=1,mgp=c(3,0.5,0),adj=0.5)
+graphics::par(oma=c(4,4,3,4),mar=c(0,0,0,0), xpd=NA,tcl=-0.3,bg="white",cex=0.8,cex.axis=0.9,cex.lab=0.9,bty="o",las=1,mgp=c(3,0.5,0),adj=0.5)
 
 for (i in 1:num_plots){
-  plot(a$data.str[,i+1],xlab="", ylab="", bty="l",xaxt='n',yaxt='n',cex=1,pch=21,col="blue")
-  lines(fitted_values_str[,i],type="l",col="red",lwd=1.5)
-  legend('bottomleft', legend=names(a$data.str[i+1]),bty='n',cex=0.7)
+  graphics::plot(a$data.str[,i+1],xlab="", ylab="", bty="l",xaxt='n',yaxt='n',cex=1,pch=21,col="blue")
+  graphics::lines(fitted_values_str[,i],type="l",col="red",lwd=1.5)
+  graphics::legend('bottomleft', legend=names(a$data.str[i+1]),bty='n',cex=0.7)
 
   # Light: Print optimized parameter values on the plot ####
   leg.L.model<-paste("Model: ",str_model,sep="");
@@ -220,15 +220,15 @@ for (i in 1:num_plots){
   leg.L.tau3<-tryCatch({paste("tau3 =", round(parameters_str$tau3_str[i], digits=5), "\u00B1", round(parameters_str$tau3_se_str[i], digits=5), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 
   if(is.na(parameters_str$alpha1_str[i]) && is.na(parameters_str$alpha2_str[i])){
-    legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,1,1,1),adj=c(0, 0.5),cex=0.7)
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,1,1,1),adj=c(0, 0.5),cex=0.7)
   }
   if(!is.na(parameters_str$alpha1_str[i])&is.na(parameters_str$tau3_str[i])){
 
-    legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2),bty="n",text.font=c(2,1,1,1,1,1),adj=c(0, 0.5),cex=0.7)
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2),bty="n",text.font=c(2,1,1,1,1,1),adj=c(0, 0.5),cex=0.7)
   }
   if(!is.na(parameters_str$alpha2_str[i])){
 
-    legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3),bty="n",text.font=c(2,1,1,1,1,1,1,1),adj=c(0, 0.5),cex=0.7)
+    graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3),bty="n",text.font=c(2,1,1,1,1,1,1,1),adj=c(0, 0.5),cex=0.7)
   }
 
 
@@ -246,15 +246,15 @@ for (i in 1:num_plots){
 
 #open pdf device if the user wants to store the plots in a single pdf file
 if (out_pdf==TRUE){
-  pdf("output_plots.pdf")
+  grDevices::pdf("output_plots.pdf")
 
   #number of plots
   num_plots=2*a$meta.data$Light_curves_repeats
 
   for (i in 1:num_plots){
-    plot(a$data.sti[,i+1],xlab="Flashlets", ylab="Fluorescence", bty="l",cex=1,pch=21,col="blue",las=1)
-    lines(fitted_values_sti[,i],type="l",col="red",lwd=1.5)
-    legend('topleft', legend=names(a$data.sti[i+1]),bty='n')
+    graphics::plot(a$data.sti[,i+1],xlab="Flashlets", ylab="Fluorescence", bty="l",cex=1,pch=21,col="blue",las=1)
+    graphics::lines(fitted_values_sti[,i],type="l",col="red",lwd=1.5)
+    graphics::legend('topleft', legend=names(a$data.sti[i+1]),bty='n')
     #this is for the legend at the bottom right
     # Light: Print optimized parameter values on the plot ####
     leg.L.model<-paste("Model: ",sti_model,sep="");
@@ -264,14 +264,14 @@ if (out_pdf==TRUE){
     leg.L.sigma<-tryCatch({paste("sigma =", round(parameters_sti$sigma_sti[i], digits=0), "\u00B1", round(parameters_sti$sigma_se_sti[i], digits=0), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
     leg.L.rho<-tryCatch({paste("rho =", round(parameters_sti$rho_sti[i], digits=3), "\u00B1", round(parameters_sti$rho_se_sti[i], digits=3), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 
-    legend("bottomright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,1,1,1,1),adj=c(0, 0.5),cex = 1)
+    graphics::legend("bottomright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.sigma,leg.L.rho),bty="n",text.font=c(2,1,1,1,1),adj=c(0, 0.5),cex = 1)
 
   }
 
   for (i in 1:num_plots){
-    plot(a$data.str[,i+1],xlab="Time (log(seconds))", ylab="Fluorescence", bty="l",cex=1,pch=21,col="blue",las=1)
-    lines(fitted_values_str[,i],type="l",col="red",lwd=1.5)
-    legend('bottomleft', legend=names(a$data.str[i+1]),bty='n')
+    graphics::plot(a$data.str[,i+1],xlab="Time (log(seconds))", ylab="Fluorescence", bty="l",cex=1,pch=21,col="blue",las=1)
+    graphics::lines(fitted_values_str[,i],type="l",col="red",lwd=1.5)
+    graphics::legend('bottomleft', legend=names(a$data.str[i+1]),bty='n')
 
 
     # Light: Print optimized parameter values on the plot ####
@@ -286,15 +286,15 @@ if (out_pdf==TRUE){
     leg.L.tau3<-tryCatch({paste("tau3 =", round(parameters_str$tau3_str[i], digits=5), "\u00B1", round(parameters_str$tau3_se_str[i], digits=5), sep=" ")},error=function(Fit.Fail){return("Fit Fail")})
 
     if(is.na(parameters_str$alpha1_str[i]) && is.na(parameters_str$alpha2_str[i])){
-      legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,1,1,1),adj=c(0, 0.5),cex=1)
+      graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1),bty="n",text.font=c(2,1,1,1),adj=c(0, 0.5),cex=1)
     }
     if(!is.na(parameters_str$alpha1_str[i])&is.na(parameters_str$tau3_str[i])){
 
-      legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2),bty="n",text.font=c(2,1,1,1,1,1),adj=c(0, 0.5),cex=1)
+      graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2),bty="n",text.font=c(2,1,1,1,1,1),adj=c(0, 0.5),cex=1)
     }
     if(!is.na(parameters_str$alpha2_str[i])){
 
-      legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3),bty="n",text.font=c(2,1,1,1,1,1,1,1),adj=c(0, 0.5),cex=1)
+      graphics::legend("topright",legend=c(leg.L.model,leg.L.Fo,leg.L.Fm,leg.L.tau1,leg.L.alpha1,leg.L.tau2,leg.L.alpha2,leg.L.tau3),bty="n",text.font=c(2,1,1,1,1,1,1,1),adj=c(0, 0.5),cex=1)
     }
 
 
@@ -303,7 +303,7 @@ if (out_pdf==TRUE){
 
 
   #end of pdf output
-  dev.off()
+  grDevices::dev.off()
 }
 
 
