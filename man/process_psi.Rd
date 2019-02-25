@@ -5,7 +5,7 @@
 \title{Wrapper function to import data from PSI FRRf and fit induction/re-opening models to the dataset}
 \usage{
 process_psi(file_name, out_name = "results", sti_model = "all",
-  str_model = "tau2", calib_file = NA, protocol = "campbell",
+  str_model = "tau1", calib_file = NA, protocol = "campbell",
   turn_plots_off = FALSE, plot_matrix = FALSE, out_files = FALSE,
   out_pdf = FALSE, dec = ".", subset_time = 600)
 }

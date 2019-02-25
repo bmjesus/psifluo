@@ -189,29 +189,28 @@ if (i==1)
 #format the time data, the time format is determined by the computer OS
 #the first thing is to check if there's an AM or PM string the time.data[,3] object
 #it will fail if the time is in any other third type format
-#dat.num <- read.delim(filename, skip=9, header=F)
-#data.sets <- which(dat.num[,1]=="-----------------------------------")-1
-#time.data <- read.delim(filename , skip=9, header=F, nrows=data.sets[1])
-#time.data <- read.delim(filename , skip=9, header=F, nrows=n.data.sets,sep='\t')
-#print(n.data.sets)
-#print(time.data)
+#turns out it failed imediatly when we tried it with a greek format
+#the temporary solution was to "turn it off" while we think about a better solution
+#the time will still be stored in the same objects but it will be stored as a text variable
 
 ####NEW CODE
-f1<-scan(filename,character(0),sep='\n',quiet=TRUE)
-data.sep <- which(f1=="-----------------------------------")
-l<-strsplit(f1[(data.sep[1]+9):data.sep[2]-1],split='\t')
-time.data <- data.frame(matrix(unlist(l), nrow=n.data.sets, byrow=T),stringsAsFactors=FALSE)
-#print(n.data.sets)
+#f1<-scan(filename,character(0),sep='\n',quiet=TRUE)
+#data.sep <- which(f1=="-----------------------------------")
+#l<-strsplit(f1[(data.sep[1]+9):data.sep[2]-1],split='\t')
+#time.data <- data.frame(matrix(unlist(l), nrow=n.data.sets, byrow=T),stringsAsFactors=FALSE)
 
-a<-grepl("AM|PM", time.data[,3])
+#the code bellow is redundant and it will be corrected once I have time. BJ (2018-02-25)
+a<-grepl("AM|PM", data.samples[,3])
 #print(a)
 if (a[1]==FALSE){
-  formatted.time <- strptime(time.data[,3], format="%d/%m/%Y %H:%M:%S")
+  #formatted.time <- strptime(time.data[,3], format="%d/%m/%Y %H:%M:%S")
+  formatted.time <- data.samples[,3]
 }else{
-  formatted.time <- strptime(time.data[,3], format="%m/%d/%Y %I:%M:%S %p")
+  #formatted.time <- strptime(time.data[,3], format="%m/%d/%Y %I:%M:%S %p")
+  formatted.time <- data.samples[,3]
 }
 
-#print(formatted.time)
+
 
 #Getting the voltage and respective light intensity, it's dependent on the
 #calibration  file

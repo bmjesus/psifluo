@@ -19,7 +19,7 @@
 process_psi<-function(file_name,
                          out_name = "results",
                          sti_model = "all",
-                         str_model = "tau2",
+                         str_model = "tau1",
                          calib_file = NA,
                          protocol = "campbell",
                          turn_plots_off = FALSE,
@@ -54,7 +54,7 @@ fitted_values_sti<-data.frame(matrix(ncol = 2*number_datasets, nrow = length(a$d
 
 
 #creating a data.frame to store the fitted parameters
-parameters_sti<-stats::setNames(data.frame(matrix(ncol = 16, nrow = 0)), c('fo_sti','fm_sti','sigma_sti','rho_sti','fo_se_sti','fm_se_sti','sigma_se_sti','rho_se_sti','fo_tvalue_sti','fm_tvalue_sti','sigma_tvalue_sti','rho_tvalue_sti','fo_p_sti','fm_p_sti','sigma_p_sti','rho_p_sti'))
+parameters_sti<-stats::setNames(data.frame(matrix(ncol = 17, nrow = 0)), c('fo_sti','fm_sti','sigma_sti','rho_sti','fo_se_sti','fm_se_sti','sigma_se_sti','rho_se_sti','fo_tvalue_sti','fm_tvalue_sti','sigma_tvalue_sti','rho_tvalue_sti','fo_p_sti','fm_p_sti','sigma_p_sti','rho_p_sti','psII_eff_sti'))
 
 
 ###############################################################################

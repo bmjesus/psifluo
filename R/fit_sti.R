@@ -206,18 +206,22 @@ graphics::legend("bottomright",legend=c(leg.L.model,leg.L.main,leg.L.Fo,leg.L.Fm
 ##########################################################################
 ##########################################################################
 
+#calculating PSII quantum efficiency and adding it to the fitted_parameters dataframe
+#print(fitted_values$fo_sti)
+
+psII_eff<-(res$fm_sti-res$fo_sti)/res$fm_sti
+
+res$psII_eff_sti<-psII_eff
+
+
+##########################################################################
+##########################################################################
+
 #Output list
 output<-list(flashlet_energy,res,fitted_values,cumulative_energy)
 names(output)<-c('flashlet_energy','fitted_parameters','fitted_values','cumulative_energy')
 return(output)
 
-  #res$model_sti<-wm;
-  #names(sti.fit)<-names(res)
-  #sti.fit[c-1,]<-res
 
-
-  #confidence intervals
-  #tryCatch({fit1u<-psiworx.model.sti(incident=x, sigma=res$sigma_sti+res$sigma_se_sti, fo=res$fo_sti+res$fo_se_sti, fm=res$fm_sti+res$fm_se_sti, rho=res$rho_sti+res$rho_se_sti)},error=function(Fit.Fail){return("Fit Fail")})
-  #tryCatch({fit1l<-psiworx.model.sti(incident=x, sigma=res$sigma_sti-res$sigma_se_sti, fo=res$fo_sti-res$fo_se_sti, fm=res$fm_sti-res$fm_se_sti, rho=res$rho_sti-res$rho_se_sti)},error=function(Fit.Fail){return("Fit Fail")})
 
 }
