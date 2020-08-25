@@ -8,7 +8,7 @@
 #' @param subset_time selects a subset of the re-opening dataset based on time (micro seconds) from the first point. To be used only with the tau1_subset model.
 #' @param protocol Type of protocol used to produce the PSI file. Currently only "campbell" is implemented.
 #' @param turn_plots_off Logical, plots off. Default = FALSE
-#' @param plot_matrix Logical, should plots be plotted to a plot matrix. Default = TRUE
+#' @param plot_matrix Logical, should plots be plotted to a plot matrix. Default = FALSE
 #' @param out_files Logical, should results (fitted parameters) be exported to a csv file. Default = FALSE
 #' @param out_pdf Logical, should plot be exported to a pdf file. Default = FALSE
 #' @param dec decimal separator, default= "."
@@ -28,6 +28,7 @@ process_psi<-function(file_name,
                          out_pdf = FALSE,
                          dec = ".",
                          subset_time = 600){
+
 
 ################################################################################
 #read psi data file and stores input data  inside an object "a"
@@ -81,7 +82,10 @@ counter<-1
 for (i in 2:(number_datasets_LD+1))
 {
   a1<-fit_sti(x = a$flashlet_energy,y = a$data.sti[,i],fit_model = sti_model,plots = plots)
-  graphics::legend('topleft', legend=names(a$data.sti[i]),bty='n',cex=1)
+  if (plots==TRUE){
+    graphics::legend('topleft', legend=names(a$data.sti[i]),bty='n',cex=1)
+  }
+
   parameters_sti[counter,]<-a1$fitted_parameters
   fitted_values_sti[,counter]<-a1$fitted_values
   counter<-counter+1
@@ -124,7 +128,9 @@ for (i in 2:(number_datasets_LD+1))
 {
   a1<-fit_str(a$data.str[,1],a$data.str[,i],
               tau_model=str_model,plots=plots,subset_time = subset_time)
+  if (plots==TRUE){
   graphics::legend('bottomleft', legend=names(a$data.str[i]),bty='n',cex=1)
+  }
   parameters_str[counter,]<-a1$fitted_parameters
   fitted_values_str[,counter]<-a1$fitted_values
   counter<-counter+1
